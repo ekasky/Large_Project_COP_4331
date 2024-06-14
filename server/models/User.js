@@ -35,8 +35,7 @@ const userSchema = new mongoose.Schema({
     },
 
     last_login: {
-        type: Date,
-        required: true
+        type: Date
     },
 
     email_verified: {
