@@ -1,6 +1,8 @@
 const validator = require('validator');
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
 
-const registerController = (req, res) => {
+const registerController = async (req, res) => {
 
     // Extract the request fields
     const { first_name, last_name, email, password, username } = req.body;
@@ -50,6 +52,39 @@ const registerController = (req, res) => {
         });
 
     }
+
+    try {
+
+        // Check to see if the user email is in use
+        if(await User.findOne({email})) {
+
+            return res.status(409).json({
+                error: 'Email already in use'
+            });
+
+        }
+
+        // Check to see if the username is in use
+        if(await User.findOne({username})) {
+
+            return res.status(409).json({
+                error: 'Username taken'
+            });
+
+        }
+
+        
+
+    }
+    catch(error) {
+
+        console.error('Error registering user: ', error);
+
+        res.status(500).json({
+            error: 'Failed to register user. Please try again later.'
+        });
+
+    }    
 
 };
 
