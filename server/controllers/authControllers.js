@@ -2,6 +2,7 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const generateValidateEmailToken = require('../utils/generateValidateEmailToken');
+const sendVerifyEmail = require('../utils/sendVerifyEmail');
 
 const registerController = async (req, res) => {
 
@@ -98,6 +99,9 @@ const registerController = async (req, res) => {
 
         // Generate a token to validate the user's email
         const validateToken = await generateValidateEmailToken(email);
+
+        // Send the validate email
+        const info = await sendVerifyEmail(validateToken, email);
 
         // Send success response
         res.status(200).json({
