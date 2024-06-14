@@ -30,6 +30,27 @@ const registerController = (req, res) => {
 
     }
 
+    // Password requirements
+    const passwordRequirements = {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1
+
+    };
+
+    // Check the password strength using validator
+    if(!validator.isStrongPassword(password, passwordRequirements)) {
+
+        return res.status(400).json({
+
+            error: 'Password requirements not met. It should be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 symbol, and 1 digit.'
+
+        });
+
+    }
+
 };
 
 module.exports = {
