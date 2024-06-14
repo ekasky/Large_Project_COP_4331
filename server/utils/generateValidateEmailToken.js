@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const generateValidateEmailToken = (email) => {
+const generateValidateEmailToken = async (email) => {
 
     const key = process.env.JWT_PRIVATE_KEY;
 
@@ -17,7 +17,7 @@ const generateValidateEmailToken = (email) => {
     }, 
     key,
     {
-        algorithm: 'RS256'
+        algorithm: 'HS256'
     });
 
     return token;

@@ -1,6 +1,7 @@
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const generateValidateEmailToken = require('../utils/generateValidateEmailToken');
 
 const registerController = async (req, res) => {
 
@@ -95,7 +96,8 @@ const registerController = async (req, res) => {
         // Save the new user to the db
         const user = await newUser.save();
 
-        // TODO: Send verify email
+        // Generate a token to validate the user's email
+        const validateToken = await generateValidateEmailToken(email);
 
         // Send success response
         res.status(200).json({
