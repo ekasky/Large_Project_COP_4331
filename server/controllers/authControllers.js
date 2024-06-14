@@ -1,4 +1,4 @@
-
+const validator = require('validator');
 
 const registerController = (req, res) => {
 
@@ -14,6 +14,17 @@ const registerController = (req, res) => {
         return res.status(400).json({
 
             error: `Missing required fields: ${missingFields.join(', ')}`
+
+        });
+
+    }
+
+    // Check the email format
+    if(!validator.isEmail(email)) {
+
+        return res.status(400).json({
+
+            error: 'Invalid email format'
 
         });
 
