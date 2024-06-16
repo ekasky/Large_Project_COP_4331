@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import checkRequiredFields from "../utils/checkRequiredFields";
 import checkEmailFormat from "../utils/checkEmailFormat";
 import checkPasswordStrength from "../utils/checkPasswordStrength";
+import findUserByEmail from "../utils/findUserByEmail";
 
 const registerController = async (req:Request, res:Response) => {
 
@@ -46,6 +47,15 @@ const registerController = async (req:Request, res:Response) => {
     }
 
     // Check if email address is already in use
+    let user = await findUserByEmail(email);
+
+    if(user !== null) {
+
+        res.status(400).json({
+            message: "Email already in use"
+        });
+
+    }
 
 };
 
