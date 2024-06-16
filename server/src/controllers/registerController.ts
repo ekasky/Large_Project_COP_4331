@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import checkRequiredFields from "../utils/checkRequiredFields";
+import checkEmailFormat from "../utils/checkEmailFormat";
 
 const registerController = async (req:Request, res:Response) => {
 
@@ -14,6 +15,15 @@ const registerController = async (req:Request, res:Response) => {
         return res.status(400).json({
             message: "Missing required fields",
             missing: missing
+        });
+
+    }
+
+    // Check if email is valid format
+    if(!checkEmailFormat(email)) {
+
+        return res.status(400).json({
+            message: "Invalid email address format"
         });
 
     }
