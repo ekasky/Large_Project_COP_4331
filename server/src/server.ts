@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import connectToDb from "./utils/connectToDb";
 import authRoutes from "./routes/authRoutes";
 
 // Load the .env file
@@ -12,6 +13,9 @@ const app = express();
 
 // Use built in express middleware to parse request body as json
 app.use(express.json());
+
+// Connect to MongoDB
+connectToDb();
 
 // Add auth routes
 app.use("/api/auth", authRoutes);
