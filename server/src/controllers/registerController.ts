@@ -45,6 +45,8 @@ const registerController = async (req:Request, res:Response) => {
 
     }
 
+    // Check if email address is already in use
+
 };
 
 export default registerController;
