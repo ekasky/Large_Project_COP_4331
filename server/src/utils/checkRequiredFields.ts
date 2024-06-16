@@ -1,14 +1,14 @@
 
 
-const checkRequiredFields = (req:any, expectedFields:string[]):boolean => {
+const checkRequiredFields = (req:any, expectedFields:string[]):string[] | null => {
 
     const missingFields = expectedFields.filter(field => !req.body[field]); 
 
     if(missingFields.length > 0) {
-        return false;
+        return missingFields;
     }
 
-    return true;
+    return null;
 
 };
 
