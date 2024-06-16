@@ -53,6 +53,11 @@ const userSchema = new Schema<UserDocument>({
     lastLogin: {
         type: Date,
         default: null
+    },
+
+    emailVerified: {
+        type: Boolean,
+        default: false
     }
 
 });
