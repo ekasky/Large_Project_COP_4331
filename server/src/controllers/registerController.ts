@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import bcrpyt from "bcrypt";
 import checkRequiredFields from "../utils/checkRequiredFields";
 import checkEmailFormat from "../utils/checkEmailFormat";
 import checkPasswordStrength from "../utils/checkPasswordStrength";
@@ -77,6 +78,10 @@ const registerController = async (req:Request, res:Response) => {
         });
 
     }
+
+    // Hash the user's password using bcrypt for safe db storage
+    const salt = await bcrpyt.genSalt(10);
+    const hash = await bcrpyt.hash(password, salt);
 
 };
 
