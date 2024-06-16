@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import authRoutes from "./routes/authRoutes";
 
 // Load the .env file
 dotenv.config();
@@ -12,13 +13,8 @@ const app = express();
 // Use built in express middleware to parse request body as json
 app.use(express.json());
 
-// Test Route
-
-app.get('/test', (req:Request, res:Response) => {
-
-    res.send("Test");
-
-});
+// Add auth routes
+app.use("/api/auth", authRoutes);
 
 // End test route
 
