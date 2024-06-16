@@ -5,6 +5,7 @@ import checkEmailFormat from "../utils/checkEmailFormat";
 import checkPasswordStrength from "../utils/checkPasswordStrength";
 import findUserByEmail from "../utils/findUserByEmail";
 import findUserByUsername from "../utils/findUserByUsername";
+import { User, UserDocument } from "../model/User";
 
 const registerController = async (req:Request, res:Response) => {
 
@@ -82,6 +83,27 @@ const registerController = async (req:Request, res:Response) => {
     // Hash the user's password using bcrypt for safe db storage
     const salt = await bcrpyt.genSalt(10);
     const hash = await bcrpyt.hash(password, salt);
+
+    // Create a new user object to insert to the db
+    const newUser = new User({
+        first_name,
+        last_name,
+        email,
+        username,
+        password: hash,
+        emailVerified: false
+    });
+
+    // Save the new user to the db
+    await newUser.save();
+
+    // TODO: Send email verification code
+
+    // Respond with a success message
+    res.status(200).json({
+        message: "User registered successfully"
+    });
+    
 
 };
 
