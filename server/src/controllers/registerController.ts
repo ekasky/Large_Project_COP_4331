@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 
-const registerController = (req:Request, res:Response) => {
+const registerController = async (req:Request, res:Response) => {
 
-    res.status(200).json({
-        message: "Register Endpoint"
-    });
+    // Extract the request body from the request
+    const {first_name, last_name, email, username, password}:{first_name: string, last_name:string, email:string, username:string, password:string} = req.body;
+    
 
 };
 
