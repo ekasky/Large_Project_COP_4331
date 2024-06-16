@@ -3,14 +3,15 @@ import checkRequiredFields from "../utils/checkRequiredFields";
 import checkEmailFormat from "../utils/checkEmailFormat";
 import checkPasswordStrength from "../utils/checkPasswordStrength";
 import findUserByEmail from "../utils/findUserByEmail";
+import findUserByUsername from "../utils/findUserByUsername";
 
 const registerController = async (req:Request, res:Response) => {
 
     // Extract the request body from the request
-    const {first_name, last_name, email, username, password}:{first_name: string, last_name:string, email:string, username:string, password:string} = req.body;
+    const {first_name, last_name, email, username, password, confirm_password}:{first_name: string, last_name:string, email:string, username:string, password:string, confirm_password:string} = req.body;
 
     // Check if the required fields are present in the request body
-    const missing = checkRequiredFields(req, ["first_name", "last_name", "email", "username", "password"]);
+    const missing = checkRequiredFields(req, ["first_name", "last_name", "email", "username", "password", "confirm_password"]);
 
     if(missing !== null) {
 
@@ -46,6 +47,15 @@ const registerController = async (req:Request, res:Response) => {
 
     }
 
+    // Check if the passwords entered by the user matches
+    if(password !== confirm_password) {
+
+        return res.status(400).json({
+            message: "Passwords do not match"
+        });
+
+    }
+
     // Check if email address is already in use
     let user = await findUserByEmail(email);
 
@@ -53,6 +63,17 @@ const registerController = async (req:Request, res:Response) => {
 
         res.status(400).json({
             message: "Email already in use"
+        });
+
+    }
+
+    // Check and see if the username is taken
+    user = await findUserByUsername(username);
+
+    if(user !== null) {
+
+        return res.status(400).json({
+            message: "Username taken"
         });
 
     }
