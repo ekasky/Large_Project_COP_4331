@@ -9,6 +9,9 @@ const PORT = process.env.PORT;
 
 const app = express();
 
+// Use built in express middleware to parse request body as json
+app.use(express.json());
+
 // Test Route
 
 app.get('/test', (req:Request, res:Response) => {
