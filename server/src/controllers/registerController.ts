@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import checkRequiredFields from "../utils/checkRequiredFields";
 import checkEmailFormat from "../utils/checkEmailFormat";
+import checkPasswordStrength from "../utils/checkPasswordStrength";
 
 const registerController = async (req:Request, res:Response) => {
 
@@ -24,6 +25,22 @@ const registerController = async (req:Request, res:Response) => {
 
         return res.status(400).json({
             message: "Invalid email address format"
+        });
+
+    }
+
+    // Check the strength of the password
+    if(!checkPasswordStrength(password)) {
+
+        return res.status(400).json({
+            message: "Password weak",
+            mustContain: {
+                length: 8,
+                lowerCase: 1,
+                upperCase: 1,
+                number: 1,
+                symbol: 1
+            }
         });
 
     }
