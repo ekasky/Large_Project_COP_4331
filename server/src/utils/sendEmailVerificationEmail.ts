@@ -6,14 +6,14 @@ const sendEmailVerificationEmail = async (email:string):Promise<void> => {
     const JWT_KEY = process.env.JWT_PRIVATE_KEY as string;
 
     // Prepare JWT Data
-    const iat = Date.now();
-    const exp = 15 * 60;
+    const iat = Math.floor(Date.now() / 1000); // Issued at in seconds
+    const exp = iat + (15 * 60); // Expiration time in seconds (15 minutes from now)
 
     // Create jwt
     const token = jsonwebtoken.sign({
         email,
         iat,
-        exp: iat + exp,
+        exp,
         purpose: 'Account verification'
     }, JWT_KEY, {algorithm: 'HS256'});
 
@@ -23,7 +23,7 @@ const sendEmailVerificationEmail = async (email:string):Promise<void> => {
     const base_url = process.env.BASE_URL;
 
     // Create the verification link
-    const link = `${base_url}/verify-account?token=${token}`;
+    const link = `${base_url}/api/auth/verify-account?token=${token}`;
 
 
     // Configure nodemailer
