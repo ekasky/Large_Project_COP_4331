@@ -1,7 +1,7 @@
 import jsonwebtoken from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
-const sendEmailVerificationEmail = (email:string) => {
+const sendEmailVerificationEmail = async (email:string):Promise<void> => {
 
     const JWT_KEY = process.env.JWT_PRIVATE_KEY as string;
 
@@ -35,6 +35,23 @@ const sendEmailVerificationEmail = (email:string) => {
             user: auth_email_address,
             pass: auth_password
         }
+    });
+
+    // Create HTML email message
+    const html = `
+        <h1>Verify your account</h1>
+        <p>Click the <a href="${link}">link</a> to verify your account</p>
+        <p>If you did not request this, please ignore this email.</p>
+    `;
+
+    // Send the email
+    await transporter.sendMail({
+
+        from: `${auth_email_address}`,
+        to: `${email}`,
+        subject: `Verify your account`,
+        html: html
+
     });
 
 };
