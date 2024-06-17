@@ -64,7 +64,7 @@ const registerController = async (req:Request, res:Response) => {
 
     if(user !== null) {
 
-        res.status(400).json({
+        return res.status(400).json({
             message: "Email already in use"
         });
 
