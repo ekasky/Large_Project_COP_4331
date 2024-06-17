@@ -6,6 +6,7 @@ import checkPasswordStrength from "../utils/checkPasswordStrength";
 import findUserByEmail from "../utils/findUserByEmail";
 import findUserByUsername from "../utils/findUserByUsername";
 import { User, UserDocument } from "../model/User";
+import sendEmailVerificationEmail from "../utils/sendEmailVerificationEmail";
 
 const registerController = async (req:Request, res:Response) => {
 
@@ -97,7 +98,8 @@ const registerController = async (req:Request, res:Response) => {
     // Save the new user to the db
     await newUser.save();
 
-    // TODO: Send email verification code
+    // Send email verification code
+    await sendEmailVerificationEmail(email);
 
     // Respond with a success message
     res.status(200).json({
