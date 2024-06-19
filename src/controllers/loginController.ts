@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import checkRequiredFields from "../utils/checkRequiredFields";
 import findUserByUsername from "../utils/findUserByUsername";
+import { User } from "../model/User";
 
 const loginController = async (req:Request, res:Response) => {
 
@@ -32,10 +33,32 @@ const loginController = async (req:Request, res:Response) => {
 
     }
 
+    // Ensure the user is not locked
+    if(user.accountLocked) {
+
+        return res.status(401).json({
+            message: "User account locked. Please reset your password"
+        });
+
+    }
+
     // Compare the password in the user document to the password supplied in the request
     const valid = await bcrypt.compare(password, user.password);
 
     if(!valid) {
+
+        // Add 1 to the login attempts
+        await User.findByIdAndUpdate(user.id, { $inc: { loginAttempts: 1 } });
+
+        // Lock the account if the user tries more than 5 times unsuccessfully
+        if(user.loginAttempts+1 >= 5) {
+
+            await User.findByIdAndUpdate(user.id, {
+                loginAttempts: 0,
+                accountLocked: true
+            });
+
+        }
 
         return res.status(401).json({
             message: "Invalid Login Credentials"
@@ -58,6 +81,12 @@ const loginController = async (req:Request, res:Response) => {
         id,
         username
     }, JWT_KEY, {algorithm: 'HS256'} );
+
+    // Reset login attempts on successful login
+    await User.findByIdAndUpdate(user._id, {
+        loginAttempts: 0,
+        accountLocked: false
+    });
 
     // Return user token to the browser
     return res.status(200).json({
