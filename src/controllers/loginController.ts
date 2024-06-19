@@ -7,6 +7,7 @@ import { User } from "../model/User";
 
 const loginController = async (req:Request, res:Response) => {
 
+    /* 
     // Extract the user's login credentials
     const { username, password } = req.body;
 
@@ -92,6 +93,7 @@ const loginController = async (req:Request, res:Response) => {
     return res.status(200).json({
         token
     });
+    */
 
 };
 

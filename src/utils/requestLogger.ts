@@ -4,7 +4,7 @@ import express, { Request, Response, NextFunction } from "express";
 
 const logFilePath = path.resolve(__dirname, '../../server.log');
 
-const logger = (req:Request, message:string, level:string="INFO"):void => {
+const requestLogger = (req:Request, message:string, level:string="INFO"):void => {
 
 
     const timestamp = new Date().toISOString();
@@ -28,4 +28,4 @@ const logger = (req:Request, message:string, level:string="INFO"):void => {
 
 };
 
-export default logger;
+export default requestLogger;

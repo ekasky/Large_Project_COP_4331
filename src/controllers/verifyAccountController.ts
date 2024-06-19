@@ -4,6 +4,7 @@ import { User } from "../model/User";
 
 const verifyAccountController = async (req:Request, res:Response) => {
 
+    /* 
     try {
 
         // Get the verificartion token from the url
@@ -57,6 +58,7 @@ const verifyAccountController = async (req:Request, res:Response) => {
         res.status(500).send('Internal server error');
 
     }
+    */
 
 }
 
