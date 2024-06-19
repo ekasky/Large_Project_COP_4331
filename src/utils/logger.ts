@@ -1,8 +1,26 @@
 import fs from "fs";
 import path from "path";
-import express, { Request, Response, NextFunction } from "express";
+import { Request } from "express";
 
 const logFilePath = path.resolve(__dirname, '../../server.log');
+
+const logger = (message:string, level:string="INFO"):void => {
+
+    const timestamp = new Date().toISOString();
+    const logMessage = `${timestamp} -- MESSAGE: [${level}]: ${message}\n`;
+
+    fs.appendFile(logFilePath, logMessage, (error) => {
+
+        if(error) {
+            console.error('ERROR WRITING TO THE LOG FILE:', error);
+        }
+
+    });
+
+    // Log to the console as well
+    console.log(logMessage);
+
+};
 
 const requestLogger = (req:Request, message:string, level:string="INFO"):void => {
 
@@ -28,4 +46,6 @@ const requestLogger = (req:Request, message:string, level:string="INFO"):void =>
 
 };
 
-export default requestLogger;
+
+export default logger;
+export { requestLogger };

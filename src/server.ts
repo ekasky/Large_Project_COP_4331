@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import connectToDb from "./utils/connectToDb";
 import authRoutes from "./routes/authRoutes";
+import logger from "./utils/logger";
 
 // Load the .env file
 dotenv.config();
@@ -24,6 +25,6 @@ app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
 
-    console.log(`Listening on port ${PORT}`);
+    logger(`Listening on port ${PORT}`);
 
 });

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import checkRequiredFields, { ExpectedFields, ExpectedFieldsReturn } from "../utils/checkRequiredFields";
 import { IncorrectTypesError, MissingFieldsAndIncorrectTypesError, MissingFieldsError } from "../utils/errorTypes";
-import requestLogger from "../utils/requestLogger";
+import { requestLogger } from "../utils/logger";
 
 const expectedFields:ExpectedFields[] = [
     {name: 'first_name', type: 'string'},

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import logger from "./logger";
 
 
 const connectToDb = async() => {
@@ -8,12 +9,12 @@ const connectToDb = async() => {
     try {
 
         await mongoose.connect(URI);
-        console.log("Connected to db");
+        logger("Connected to MongoDB Atlas");
 
     }
     catch(error) {
 
-        console.error(`Error connecting to db: ${error}`);
+        logger(`Error connecting to db: ${error}`);
 
     }
 
