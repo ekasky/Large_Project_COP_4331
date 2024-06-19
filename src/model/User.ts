@@ -11,7 +11,8 @@ export interface UserDocument extends Document {
     createdAt: Date;
     lastLogin: Date;
     emailVerified: boolean;
-
+    loginAttempts: number;
+    accountLocked: boolean;
 
 };
 
@@ -56,6 +57,16 @@ const userSchema = new Schema<UserDocument>({
     },
 
     emailVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    loginAttempts: {
+        type: Number,
+        default: 0
+    },
+
+    accountLocked: {
         type: Boolean,
         default: false
     }
