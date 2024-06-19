@@ -1,4 +1,4 @@
-import { ExpectedFieldsReturn } from "./checkRequiredFields";
+import { ExpectedFieldsReturn } from "./interfaces";
 
 
 export class MissingFieldsError extends Error {
@@ -35,4 +35,13 @@ export class MissingFieldsAndIncorrectTypesError extends Error {
         this.expectedFields = expectedFields;
     }
 
+};
+
+export class InvalidEmailFormatError extends Error {
+  
+    constructor(message:string) {
+        super(message);
+        this.name = 'InvalidInputFormat';
+    }
+    
 };

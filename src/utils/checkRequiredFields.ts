@@ -1,21 +1,5 @@
 import { Request } from "express";
-
-export interface ExpectedFields {
-
-    name: string;
-    type: 'string' | 'number' | 'boolean';
-
-};
-
-export interface ExpectedFieldsReturn {
-
-    missingFields: string[],
-    incorrectTypes: {
-        field: string,
-        expected: string
-    }[]
-
-};
+import { ExpectedFields, ExpectedFieldsReturn } from "./interfaces";
 
 const checkRequiredFields = (req:Request, expectedFields:ExpectedFields[]):ExpectedFieldsReturn | null => {
 

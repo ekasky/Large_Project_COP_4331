@@ -1,12 +1,5 @@
 import validator from "validator";
-
-export interface PasswordRequirements {
-    minLength: number,
-    minLowerCase: number,
-    minUpperCase: number,
-    minNumbers: number,
-    minSymbols: number
-};
+import { PasswordRequirements } from "./interfaces";
 
 const checkPasswordStrength = (password:string):boolean => {
 

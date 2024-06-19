@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import checkRequiredFields, { ExpectedFields, ExpectedFieldsReturn } from "../utils/checkRequiredFields";
-import { IncorrectTypesError, MissingFieldsAndIncorrectTypesError, MissingFieldsError } from "../utils/errorTypes";
+import { ExpectedFields, ExpectedFieldsReturn } from "../utils/interfaces";
+import checkRequiredFields from "../utils/checkRequiredFields";
+import { IncorrectTypesError, InvalidEmailFormatError, MissingFieldsAndIncorrectTypesError, MissingFieldsError } from "../utils/errorTypes";
 import { requestLogger } from "../utils/logger";
+import checkEmailFormat from "../utils/checkEmailFormat";
 
 const expectedFields:ExpectedFields[] = [
     {name: 'first_name', type: 'string'},
@@ -43,6 +45,18 @@ const registerController = async (req:Request, res:Response) => {
 
         }
 
+        // Validate that the email address is valid form
+        // Ensures the email is in canonical form
+        // Ensures the email is no longer than 100 characters long
+        const validEmailAddress = checkEmailFormat(req.body['email']);
+
+        // Handle a email validation error
+        if(validEmailAddress !== null) {
+
+            throw new InvalidEmailFormatError(validEmailAddress);
+
+        }
+
         return res.send("GOOD");
 
     }
@@ -79,6 +93,18 @@ const registerController = async (req:Request, res:Response) => {
             return res.status(400).json({
                 message: error.message,
                 missingFields: error.missingFields
+            });
+
+        }
+
+        if(error instanceof InvalidEmailFormatError) {
+
+            requestLogger(req, `${error.message}`, 'ERROR');
+
+            return res.status(400).json({
+
+                message: error.message
+
             });
 
         }
