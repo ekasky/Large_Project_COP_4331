@@ -7,6 +7,7 @@ import findUserByEmail from "../utils/findUserByEmail";
 import findUserByUsername from "../utils/findUserByUsername";
 import { User, UserDocument } from "../model/User";
 import sendEmailVerificationEmail from "../utils/sendEmailVerificationEmail";
+import logger from "../utils/logger";
 
 const registerController = async (req:Request, res:Response) => {
 
@@ -17,6 +18,8 @@ const registerController = async (req:Request, res:Response) => {
     const missing = checkRequiredFields(req, ["first_name", "last_name", "email", "username", "password", "confirm_password"]);
 
     if(missing !== null) {
+
+        logger(req, res, `Missing requred fields: ${missing?.join(', ')}`);
 
         return res.status(400).json({
             message: "Missing required fields",
