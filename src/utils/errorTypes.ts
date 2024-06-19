@@ -1,28 +1,38 @@
+import { ExpectedFieldsReturn } from "./checkRequiredFields";
 
 
 export class MissingFieldsError extends Error {
 
-    constructor(message:string) {
+    missingFields: ExpectedFieldsReturn['missingFields'];
+
+    constructor(message:string, missingFields:ExpectedFieldsReturn['missingFields']) {
         super(message);
         this.name = 'MissingFieldsError';
+        this.missingFields = missingFields;
     }
 
 };
 
 export class IncorrectTypesError extends TypeError {
   
-    constructor(message:string) {
+    incorrectTypes: ExpectedFieldsReturn['incorrectTypes'];
+
+    constructor(message:string, incorrectTypes:ExpectedFieldsReturn['incorrectTypes']) {
         super(message);
         this.name = 'IncorrectTypesError';
+        this.incorrectTypes = incorrectTypes;
     }
     
 };
 
 export class MissingFieldsAndIncorrectTypesError extends Error {
 
-    constructor(message:string) {
+    expectedFields:ExpectedFieldsReturn;
+
+    constructor(message:string, expectedFields:ExpectedFieldsReturn) {
         super(message);
         this.name = 'MissingFieldsAndIncorrectTypesError';
+        this.expectedFields = expectedFields;
     }
 
 };
