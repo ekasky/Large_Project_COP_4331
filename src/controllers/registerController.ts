@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { ExpectedFields, ExpectedFieldsReturn } from "../utils/interfaces";
 import checkRequiredFields from "../utils/checkRequiredFields";
-import { IncorrectTypesError, InvalidEmailFormatError, MissingFieldsAndIncorrectTypesError, MissingFieldsError } from "../utils/errorTypes";
+import { IncorrectTypesError, InvalidEmailFormatError, InvalidUsernameError, MissingFieldsAndIncorrectTypesError, MissingFieldsError } from "../utils/errorTypes";
 import { requestLogger } from "../utils/logger";
 import checkEmailFormat from "../utils/checkEmailFormat";
+import checkUsernameFormat from "../utils/checkUsernameFormat";
 
 const expectedFields:ExpectedFields[] = [
     {name: 'first_name', type: 'string'},
@@ -57,6 +58,16 @@ const registerController = async (req:Request, res:Response) => {
 
         }
 
+        // Validate the the username meets the requirments
+        const validUsername = checkUsernameFormat(req.body['username']);
+
+        // Handle a username validation error
+        if(validUsername !== null) {
+
+            throw new InvalidUsernameError(validUsername);
+
+        }
+
         return res.send("GOOD");
 
     }
@@ -98,6 +109,18 @@ const registerController = async (req:Request, res:Response) => {
         }
 
         if(error instanceof InvalidEmailFormatError) {
+
+            requestLogger(req, `${error.message}`, 'ERROR');
+
+            return res.status(400).json({
+
+                message: error.message
+
+            });
+
+        }
+
+        if(error instanceof InvalidUsernameError) {
 
             requestLogger(req, `${error.message}`, 'ERROR');
 
