@@ -22,3 +22,11 @@ export interface ExpectedFieldsReturn {
     }[]
 
 };
+
+export interface UsernameConstraints {
+
+    minLength: number,
+    maxLength: number,
+    pattern: RegExp
+
+};
