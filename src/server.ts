@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 
 // Connect to MongoDB
-//connectToDb();
+connectToDb();
 
 // Add auth routes
 app.use("/api/auth", authRoutes);
