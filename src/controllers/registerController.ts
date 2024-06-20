@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { ExpectedFields, ExpectedFieldsReturn } from "../utils/interfaces";
 import checkRequiredFields from "../utils/checkRequiredFields";
-import { IncorrectTypesError, InvalidEmailFormatError, InvalidUsernameError, MissingFieldsAndIncorrectTypesError, MissingFieldsError } from "../utils/errorTypes";
+import { IncorrectTypesError, InvalidInputFormatError, MissingFieldsAndIncorrectTypesError, MissingFieldsError } from "../utils/errorTypes";
 import { requestLogger } from "../utils/logger";
 import checkEmailFormat from "../utils/checkEmailFormat";
 import checkUsernameFormat from "../utils/checkUsernameFormat";
+import checkPasswordStrength from "../utils/checkPasswordStrength";
 
 const expectedFields:ExpectedFields[] = [
     {name: 'first_name', type: 'string'},
@@ -54,7 +55,7 @@ const registerController = async (req:Request, res:Response) => {
         // Handle a email validation error
         if(validEmailAddress !== null) {
 
-            throw new InvalidEmailFormatError(validEmailAddress);
+            throw new InvalidInputFormatError(validEmailAddress);
 
         }
 
@@ -64,7 +65,24 @@ const registerController = async (req:Request, res:Response) => {
         // Handle a username validation error
         if(validUsername !== null) {
 
-            throw new InvalidUsernameError(validUsername);
+            throw new InvalidInputFormatError(validUsername);
+
+        }
+
+        // Validate the user's password strength
+        const validPassword = checkPasswordStrength(req.body['password']);
+
+        // Handle a password validation error
+        if(validPassword !== null) {
+
+            throw new InvalidInputFormatError(validPassword);
+
+        }
+
+        // Ensure both password and confirm password match
+        if(req.body['password'] !== req.body['confirm_password']) {
+
+            throw new InvalidInputFormatError('Passwords do not match');
 
         }
 
@@ -108,7 +126,7 @@ const registerController = async (req:Request, res:Response) => {
 
         }
 
-        if(error instanceof InvalidEmailFormatError) {
+        if(error instanceof InvalidInputFormatError) {
 
             requestLogger(req, `${error.message}`, 'ERROR');
 
@@ -118,21 +136,7 @@ const registerController = async (req:Request, res:Response) => {
 
             });
 
-        }
-
-        if(error instanceof InvalidUsernameError) {
-
-            requestLogger(req, `${error.message}`, 'ERROR');
-
-            return res.status(400).json({
-
-                message: error.message
-
-            });
-
-        }
-
-        
+        }   
 
     }
 

@@ -37,20 +37,11 @@ export class MissingFieldsAndIncorrectTypesError extends Error {
 
 };
 
-export class InvalidEmailFormatError extends Error {
+export class InvalidInputFormatError extends Error {
   
     constructor(message:string) {
         super(message);
-        this.name = 'InvalidInputFormat';
+        this.name = 'InvalidInputFormatError';
     }
     
-};
-
-export class InvalidUsernameError extends Error {
-
-    constructor(message:string) {
-        super(message);
-        this.name = 'InvalidEmailFormat';
-    }
-
 };
