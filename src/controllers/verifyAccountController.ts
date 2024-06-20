@@ -1,15 +1,26 @@
 import { Request, Response } from "express";
 import jsonwebtoken from "jsonwebtoken";
 import { User } from "../model/User";
+import { requestLogger } from "../utils/logger";
+
+const JWT_TOKEN = process.env.JWT_PRIVATE_KEY as string;
 
 const verifyAccountController = async (req:Request, res:Response) => {
+
+    // Get the verificartion token from the url
+    const token = req.query.token as string;
+    
+    if(!token) {
+
+        requestLogger(req, 'No token was sent with email verification attempt', 'ERROR');
+
+    }
 
     /* 
     try {
 
         // Get the verificartion token from the url
         const token = req.query.token as string;
-        const JWT_TOKEN = process.env.JWT_PRIVATE_KEY as string;
 
         // If there is no token send a error message
         if(!token) {
