@@ -1,5 +1,6 @@
 export interface PasswordRequirements {
     minLength: number,
+    maxLength: number,
     minLowerCase: number,
     minUpperCase: number,
     minNumbers: number,
