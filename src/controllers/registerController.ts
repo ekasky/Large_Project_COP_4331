@@ -6,6 +6,7 @@ import { requestLogger } from "../utils/logger";
 import checkEmailFormat from "../utils/checkEmailFormat";
 import checkUsernameFormat from "../utils/checkUsernameFormat";
 import checkPasswordStrength from "../utils/checkPasswordStrength";
+import bcrpyt from "bcrypt";
 
 const expectedFields:ExpectedFields[] = [
     {name: 'first_name', type: 'string'},
@@ -86,6 +87,25 @@ const registerController = async (req:Request, res:Response) => {
 
         }
 
+        let hash:string;
+
+        try {
+            
+            // Hash the user's password for safe storage
+            const salt = await bcrpyt.genSalt(10);
+            hash = await bcrpyt.hash(req.body['password'], salt);
+
+        }
+        catch(bcrpytError:any) {
+
+            requestLogger(req, `Error hashing the password: ${bcrpytError.message}`, 'ERROR');
+
+            return res.status(500).json({
+                message: 'An error occurred while processing your register request. Please try again later.'
+            });
+
+        }
+
         return res.send("GOOD");
 
     }
@@ -139,159 +159,6 @@ const registerController = async (req:Request, res:Response) => {
         }   
 
     }
-
-    /* 
-    // Extract the request body from the request
-    const {first_name, last_name, email, username, password, confirm_password}:{first_name: string, last_name:string, email:string, username:string, password:string, confirm_password:string} = req.body;
-
-    // Check if the required fields are present in the request body
-    const missing = checkRequiredFields(req, ["first_name", "last_name", "email", "username", "password", "confirm_password"]);
-
-    if(missing !== null) {
-
-        logger(req, res, `[Error]Missing requred fields: ${missing?.join(', ')}`);
-
-        return res.status(400).json({
-            message: "Missing required fields",
-            missing: missing
-        });
-
-    }
-
-    // Check if email is valid format
-    if(!checkEmailFormat(email)) {
-
-        logger(req, res, "[Error]Invalid email address format");
-
-        return res.status(400).json({
-            message: "Invalid email address format"
-        });
-
-    }
-
-    // Check the strength of the password
-    if(!checkPasswordStrength(password)) {
-
-        logger(req, res, "[Error]Password weak. Must be at least 8 character's long, Have at least 1 lowercase, 1 uppercase, 1 number, and 1 symbol");
-
-        return res.status(400).json({
-            message: "Password weak. Must be at least 8 character's long, Have at least 1 lowercase, 1 uppercase, 1 number, and 1 symbol",
-        });
-
-    }
-
-    // Check if the passwords entered by the user matches
-    if(password !== confirm_password) {
-
-        logger(req, res, "[Error]Passwords do not match");
-
-        return res.status(400).json({
-            message: "Passwords do not match"
-        });
-
-    }
-
-    let user;
-
-    try {
-
-        // Check if email address is already in use
-        user = await findUserByEmail(email);
-
-        if(user !== null) {
-
-            logger(req, res, "[Error] Email already in use");
-    
-            return res.status(400).json({
-                message: "Email already in use"
-            });
-    
-        }
-
-    }
-    catch(error){
-
-        const err = error as Error;
-
-        logger(req, res, `[Error] Could not check email availability: ${error}`);
-
-        return res.status(500).json({
-            message: "Internal server error",
-            error: err.message
-        });
-
-    }
-
-    try {
-        
-        // Check and see if the username is taken
-        user = await findUserByUsername(username);
-
-        if(user !== null) {
-
-            return res.status(400).json({
-                message: "Username taken"
-            });
-    
-        }
-
-    }
-    catch(error) {
-
-        const err = error as Error;
-
-        logger(req, res, `[Error] Could not check username availability: ${error}`);
-
-        return res.status(500).json({
-            message: "Internal server error",
-            error: err.message
-        });
-
-    }
-
-    try {
-
-        // Hash the user's password using bcrypt for safe db storage
-        const salt = await bcrpyt.genSalt(10);
-        const hash = await bcrpyt.hash(password, salt);
-
-    }
-    catch(error) {
-
-        const err = error as Error;
-
-        logger(req, res, `[Error] Could not hash password: ${err.message}`);
-
-        return res.status(500).json({
-            message: 'Internal server error',
-            error: err.message
-        });
-
-    }
-    
-
-    // Create a new user object to insert to the db
-    const newUser = new User({
-        first_name,
-        last_name,
-        email,
-        username,
-        password: hash,
-        emailVerified: false
-    });
-
-    // Save the new user to the db
-    await newUser.save();
-
-    // Send email verification code
-    await sendEmailVerificationEmail(email);
-
-    // Respond with a success message
-    res.status(200).json({
-        message: "User registered successfully"
-    });
-    */
-    
 
 };
 
